@@ -24,20 +24,23 @@
 
 #define Delete(p) {\
     uint32_t w, pw, wbound, temp2;\
-    w = p;\
-    while (p*w <= length)\
-        w = s[w]; /* w := next(W,w); */\
-	w = s[w-1];\
-	pw = p*w;\
 	if (length == N) {\
+        w = p;\
+        while (p*w <= length)\
+            w = s[w]; /* w := next(W,w); */\
+	    w = s[w-1];\
+	    pw = p*w;\
 	    wbound = w;\
 	    while (pw > wbound) {\
-	        /* printf("Lazy deleting %d\n", pw); fflush(stdout);*/\
+	        /*printf("Lazy deleting %d\n", pw); fflush(stdout);*/\
             s[pw]++; /* Remove p*w from W; */\
             w = s[w-1]; /* w := prev(W,w); */\
 		    pw = p*w;\
 	    }\
-	}\
+	} else {\
+        w = prev_length-1;\
+        pw = p*w;\
+    }\
 	while (pw > 1) {\
  	    /*printf("Deleting %d\n", pw); fflush(stdout);*/\
         temp2 = s[pw-1]; s[temp2] = s[pw]; s[s[pw]-1] = temp2; /* Remove p*w from W; */\
@@ -49,7 +52,7 @@
 int main (int argc, char *argv[]) {
     static uint32_t s[N+2]; /* in 1..N+3 */
 	uint32_t maxS;
-    uint32_t k, length, p, w;
+    uint32_t k, length, prev_length, p, w;
 	uint32_t nrPrimes;
 	printf("N=%d\n",N);
     k = 1;
@@ -63,6 +66,7 @@ int main (int argc, char *argv[]) {
 	    /*printf("p=%d\n", p);*/
 		nrPrimes++;
         if (length < N) {
+            prev_length = length;
 			uint32_t temp = p*length;
 			if (N < temp) temp = N;
             Extend (length, temp); /* Extend W,length to minimum of p*length,N; */
