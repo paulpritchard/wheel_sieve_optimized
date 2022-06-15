@@ -1,7 +1,8 @@
 /* Sieve of Pritchard */
 /* Optimized version with original indexed linked-list */
 /* 1. When deleting with length=N, do fast deletions for values p*f that cannot be factors f in later deletions, */
-/*    by just incrementing s[p*f]. When gathering the primes, these deleted elements are recognized by being even even and skipped. */
+/*    by just incrementing s[p*f]. */
+/*    When gathering the primes, these deleted elements are recognized by being even even and skipped. */
 /* 2. Avoid a forward search for the largest factor maxf involved in deleting multiples of p, by */
 /*    (a) if length < N, setting maxf = the previous length -1 */
 /*    (b) otherwise, do a forward search the first time, then search backward from the previous value,*/
@@ -54,7 +55,7 @@ void Delete (uint32_t p) {
 	    pf = p*f;
 	    fbound = f;
 	    while (pf > fbound) {
-	        /*printf("Lazy deleting %d\n", pf); fflush(stdout);*/
+	        /*printf("Lazy deleting %d\n", pf);*/
             s[pf]++; /* Remove p*f from W; */
             f = s[f-1]; /* f := prev(W,f); */
 		    pf = p*f;
@@ -64,7 +65,7 @@ void Delete (uint32_t p) {
         pf = p*f;
     }
 	while (pf > 1) {
- 	    /*printf("Deleting %d\n", pf); fflush(stdout);*/
+ 	    /*printf("Deleting %d\n", pf);*/
         temp = s[pf-1]; s[temp] = s[pf]; s[s[pf]-1] = temp; /* Remove p*f from W; */
         f = s[f-1]; /* f := prev(W,f); */
 		pf = p*f;
@@ -74,7 +75,7 @@ void Delete (uint32_t p) {
 int main (int argc, char *argv[]) {
     uint32_t k, p, w;
 	uint32_t nrPrimes;
-    bool printPrimes = (argc = 2 ? true : false);
+    bool printPrimes = (argc == 2 ? 1 : 0);
 	printf("N=%d\n",N);
     k = 1;
     maxS = 1; /* W = {1}; */
