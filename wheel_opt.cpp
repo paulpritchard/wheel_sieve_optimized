@@ -29,18 +29,18 @@ void Extend (uint32_t &length, uint32_t n) {
         Insert (x);
         w = s[w]; /* w := next(W,w); */
         x = length + w;
-	}
+    }
     length = n;
 }
 
 void Delete (uint32_t p) {
     uint32_t f, pf, fbound, temp;
-	if (length == N) {
+    if (length == N) {
         if (maxf == 0) {
             maxf = p;
             while (p*maxf <= length)
                 maxf = s[maxf]; /* maxf := next(W,maxf); */
-	        maxf = s[maxf-1];
+            maxf = s[maxf-1];
         } else {
             temp = s[maxf-1];
             while (s[temp] > maxf) {
@@ -52,69 +52,69 @@ void Delete (uint32_t p) {
             }
         }
         f = maxf;
-	    pf = p*f;
-	    fbound = f;
-	    while (pf > fbound) {
-	        /*printf("Lazy deleting %d\n", pf);*/
+        pf = p*f;
+        fbound = f;
+        while (pf > fbound) {
+            /*printf("Lazy deleting %d\n", pf);*/
             s[pf]++; /* Remove p*f from W; */
             f = s[f-1]; /* f := prev(W,f); */
-		    pf = p*f;
-	    }
-	} else {
+            pf = p*f;
+        }
+    } else {
         f = prev_length-1;
         pf = p*f;
     }
-	while (pf > 1) {
- 	    /*printf("Deleting %d\n", pf);*/
+    while (pf > 1) {
+        /*printf("Deleting %d\n", pf);*/
         temp = s[pf-1]; s[temp] = s[pf]; s[s[pf]-1] = temp; /* Remove p*f from W; */
         f = s[f-1]; /* f := prev(W,f); */
-		pf = p*f;
-	}
+        pf = p*f;
+    }
 }
 
 int main (int argc, char *argv[]) {
     uint32_t k, p, w;
-	uint32_t nrPrimes;
+    uint32_t nrPrimes;
     bool printPrimes = (argc == 2 ? 1 : 0);
-	printf("N=%d\n",N);
+    printf("N=%d\n",N);
     k = 1;
     maxS = 1; /* W = {1}; */
     length = 2;
     p = 3;
     maxf = 0;
-	/* printf("%d\n", 2); */
+    /* printf("%d\n", 2); */
     nrPrimes = 1; /* Pr = {2}; */
     /* invariant: p = p_(k+1) and W = W_k inter {1,...,N} and length = min(P_k,N) and Pr = the primes up to p_k */
     while (p*p <= N) {
         if (length < N) {
             prev_length = length;
-			uint32_t temp = p*length;
-			if (N < temp) temp = N;
+            uint32_t temp = p*length;
+            if (N < temp) temp = N;
             Extend (length, temp); /* Extend W,length to minimum of p*length,N; */
-			if (length == N) Insert (N+3); /* sentinel */
-		}
+            if (length == N) Insert (N+3); /* sentinel */
+        }
         Delete (p); 
         ; /* Insert p into Pr; */
         k++; 
         p = s[1]; /* p = next(W, 1); */
-	}
+    }
     if (length < N) {
         Extend (length, N);
-		Insert (N+3); /* sentinel */
-	}
+        Insert (N+3); /* sentinel */
+    }
     /* count primes */
     w = 2;
-	if (printPrimes) printf("%d\n", w);
+    if (printPrimes) printf("%d\n", w);
     nrPrimes = 1;
-	w = 3;
-	while (w <= N) {
-		if (s[w] % 2 == 0) {
-			w = s[w]-1;
-		} else {
-		    if (printPrimes) printf("%d\n", w);
-		    nrPrimes++;
-			w = s[w];
-		}
-	}
-	printf("%d primes found\n", nrPrimes);
+    w = 3;
+    while (w <= N) {
+        if (s[w] % 2 == 0) {
+            w = s[w]-1;
+        } else {
+            if (printPrimes) printf("%d\n", w);
+            nrPrimes++;
+            w = s[w];
+        }
+    }
+    printf("%d primes found\n", nrPrimes);
 }
